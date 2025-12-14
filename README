@@ -120,7 +120,7 @@ multiple document types
 
 🛠️ Installation
 1. Clone the repository
-git clone https://github.com/yourusername/rag-chatbot.git
+git clone https://github.com/jinxforhaters/rag_agent.git
 cd rag-chatbot
 
 2. Install dependencies
