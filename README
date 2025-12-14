@@ -1,0 +1,195 @@
+📘 RAG Chatbot – Hybrid Intent + Context-Aware Retrieval System
+
+A Streamlit-based Retrieval-Augmented Generation (RAG) chatbot using hybrid intent routing, conversational memory, and contradiction-safe answering.
+
+🚀 Overview
+
+This project is a complete Retrieval-Augmented Generation (RAG) chatbot built with:
+
+Streamlit for UI
+
+LangChain for embeddings + vector search
+
+Groq LLM for answering
+
+Custom Retrieval Agent with:
+
+Repeated question detection
+
+Memory-only fast recall
+
+Score-based retrieval filtering
+
+Query rewriting
+
+Conversation Memory
+
+Hybrid Intent Router powered by LLM (GREETING, GOODBYE, CHITCHAT, CONTROL_COMMAND → handled without retrieval)
+
+Contradiction-safe Answer Agent
+
+PDF + Website ingestion pipeline
+
+The assistant answers ONLY using the content from the uploaded PDF or provided URL.
+It never hallucinates beyond the context and reports contradictions transparently.
+
+✨ Key Features
+🔹 1. Hybrid Intent Classifier (LLM-based)
+
+Routes non-RAG queries before hitting retrieval:
+
+GREETING
+
+GOODBYE
+
+CHITCHAT
+
+CONTROL_COMMAND
+
+All factual questions go directly to the RAG pipeline.
+
+🔹 2. Retrieval Agent with Smart Logic
+
+Handles all retrieval cases:
+
+Repeated question detection
+
+Memory-only answers
+
+Retrieval failure
+
+End-session intent
+
+Document-based chunk retrieval with score filtering
+
+Automatic query rewriting for better retrieval
+
+🔹 3. Answer Agent with Contradiction Detection
+
+The LLM checks for:
+
+Numerical contradictions
+
+Opposing statements
+
+Conflicting claims
+
+And responds neutrally while showing transparent reasoning.
+
+🔹 4. Conversation Memory
+
+Stores:
+
+User questions
+
+Assistant responses
+
+Embeddings for repeated-question detection
+
+Context for memory-only answers
+
+🔹 5. PDF & Webpage Ingestion
+
+PDF text extraction
+
+Web HTML extraction + sanitization
+
+Chunking
+
+Embedding + Vectorstore creation
+
+Supports:
+
+multiple pages
+
+multiple document types
+
+📂 Project Structure
+📦 rag-chatbot
+│
+├── app.py                     # Streamlit main UI
+├── ingestion.py               # PDF/URL ingestion & vectorstore builder
+├── retrieval_agent.py         # Smart retrieval logic + message classification
+├── answer_agent.py            # Contradiction-safe answering logic
+├── conversation_memory.py     # Conversational memory store
+├── hf_llm.py                  # Groq LLM wrapper
+├── intent_classifier.py       # LLM-based hybrid intent router
+│
+├── requirements.txt           # Dependencies
+└── README.md                  # Project documentation
+
+🛠️ Installation
+1. Clone the repository
+git clone https://github.com/yourusername/rag-chatbot.git
+cd rag-chatbot
+
+2. Install dependencies
+pip install -r requirements.txt
+
+3. Set up environment variables
+
+Create a .env file:
+
+QDRANT_URL=https://some-qdrant-instance.cloud
+QDRANT_API_KEY=xxxxxxxxxxxxxxxxxxxx
+GROQ_API_KEY=xxxxxxxxxxxxxxxxxxxx
+
+▶️ Usage
+Run Streamlit app:
+streamlit run app.py
+
+In the UI:
+
+Upload a PDF or enter a website URL
+
+Click Ingest Source
+
+Ask questions based on the document
+
+The bot will:
+
+Detect intent
+
+Retrieve relevant chunks
+
+Check contradictions
+
+Provide clean structured answers
+
+Show exact sources used
+
+🧠 How It Works (Architecture Overview)
+🔹 1. User message
+
+↓
+
+🔹 2. Intent Classifier
+
+Handles GREETING / GOODBYE / CHITCHAT / CONTROL_COMMAND
+↓
+
+🔹 3. Retrieval Agent
+
+Reformulates query
+
+Searches vectorstore
+
+Score-based filtering
+
+Detects repetition
+
+Returns top context chunks
+↓
+
+🔹 4. Answer Agent
+
+Checks contradictions
+
+Generates structured answer
+
+Appends sources
+↓
+
+🔹 5. Memory Updated
+
+Helps detect repeated questions & context recall
