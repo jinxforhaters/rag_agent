@@ -108,6 +108,7 @@ cd rag-chatbot
 ```
 
 ### 2. Install dependencies
+ use python version 3.12.12
 
 ```bash
 pip install -r requirements.txt
