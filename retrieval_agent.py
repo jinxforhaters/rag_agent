@@ -16,7 +16,7 @@ class RetrievalAgent:
     """
 
     def __init__(self, vectorstore, embedder, llm,
-                 score_threshold=0.30, max_k=5):
+                 score_threshold=0.30, max_k=20):
         self.vectorstore = vectorstore
         self.embedder = embedder
         self.llm = llm
