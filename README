@@ -1,110 +1,87 @@
-📘 RAG Chatbot – Hybrid Intent + Context-Aware Retrieval System
+# 📘 RAG Chatbot — Hybrid Intent + Context-Aware Retrieval System
 
 A Streamlit-based Retrieval-Augmented Generation (RAG) chatbot using hybrid intent routing, conversational memory, and contradiction-safe answering.
 
-🚀 Overview
+---
+
+## 🚀 Overview
 
 This project is a complete Retrieval-Augmented Generation (RAG) chatbot built with:
 
-Streamlit for UI
+- **Streamlit** for UI
+- **LangChain** for embeddings + vector search
+- **Groq LLM** for answering
+- **Custom Retrieval Agent** with:
+  - Repeated question detection
+  - Memory-only fast recall
+  - Score-based retrieval filtering
+  - Query rewriting
+- **Conversation Memory**
+- **Hybrid Intent Router** powered by LLM (GREETING, GOODBYE, CHITCHAT, CONTROL_COMMAND → handled without retrieval)
+- **Contradiction-safe Answer Agent**
+- **PDF + Website ingestion pipeline**
 
-LangChain for embeddings + vector search
+The assistant answers **ONLY** using the content from the uploaded PDF or provided URL. It never hallucinates beyond the context and reports contradictions transparently.
 
-Groq LLM for answering
+---
 
-Custom Retrieval Agent with:
+## ✨ Key Features
 
-Repeated question detection
-
-Memory-only fast recall
-
-Score-based retrieval filtering
-
-Query rewriting
-
-Conversation Memory
-
-Hybrid Intent Router powered by LLM (GREETING, GOODBYE, CHITCHAT, CONTROL_COMMAND → handled without retrieval)
-
-Contradiction-safe Answer Agent
-
-PDF + Website ingestion pipeline
-
-The assistant answers ONLY using the content from the uploaded PDF or provided URL.
-It never hallucinates beyond the context and reports contradictions transparently.
-
-✨ Key Features
-🔹 1. Hybrid Intent Classifier (LLM-based)
+### 🔹 1. Hybrid Intent Classifier (LLM-based)
 
 Routes non-RAG queries before hitting retrieval:
 
-GREETING
-
-GOODBYE
-
-CHITCHAT
-
-CONTROL_COMMAND
+- **GREETING**
+- **GOODBYE**
+- **CHITCHAT**
+- **CONTROL_COMMAND**
 
 All factual questions go directly to the RAG pipeline.
 
-🔹 2. Retrieval Agent with Smart Logic
+### 🔹 2. Retrieval Agent with Smart Logic
 
 Handles all retrieval cases:
 
-Repeated question detection
+- Repeated question detection
+- Memory-only answers
+- Retrieval failure handling
+- End-session intent detection
+- Document-based chunk retrieval with score filtering
+- Automatic query rewriting for better retrieval
 
-Memory-only answers
-
-Retrieval failure
-
-End-session intent
-
-Document-based chunk retrieval with score filtering
-
-Automatic query rewriting for better retrieval
-
-🔹 3. Answer Agent with Contradiction Detection
+### 🔹 3. Answer Agent with Contradiction Detection
 
 The LLM checks for:
 
-Numerical contradictions
-
-Opposing statements
-
-Conflicting claims
+- Numerical contradictions
+- Opposing statements
+- Conflicting claims
 
 And responds neutrally while showing transparent reasoning.
 
-🔹 4. Conversation Memory
+### 🔹 4. Conversation Memory
 
 Stores:
 
-User questions
+- User questions
+- Assistant responses
+- Embeddings for repeated-question detection
+- Context for memory-only answers
 
-Assistant responses
+### 🔹 5. PDF & Webpage Ingestion
 
-Embeddings for repeated-question detection
+- PDF text extraction
+- Web HTML extraction + sanitization
+- Chunking
+- Embedding + Vectorstore creation
 
-Context for memory-only answers
+Supports multiple pages and multiple document types.
 
-🔹 5. PDF & Webpage Ingestion
+---
 
-PDF text extraction
+## 📂 Project Structure
 
-Web HTML extraction + sanitization
-
-Chunking
-
-Embedding + Vectorstore creation
-
-Supports:
-
-multiple pages
-
-multiple document types
-
-📂 Project Structure
+```
 📦 rag-chatbot
 │
 ├── app.py                     # Streamlit main UI
@@ -117,79 +94,122 @@ multiple document types
 │
 ├── requirements.txt           # Dependencies
 └── README.md                  # Project documentation
+```
 
-🛠️ Installation
-1. Clone the repository
-git clone https://github.com/yourusername/rag-chatbot.git
+---
+
+## 🛠️ Installation
+
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/jinxforhaters/rag_agent.git
 cd rag-chatbot
+```
 
-2. Install dependencies
+### 2. Install dependencies
+
+```bash
 pip install -r requirements.txt
+```
 
-3. Set up environment variables
+### 3. Set up environment variables
 
-Create a .env file:
+Create a `.env` file in the root directory:
 
+```env
 QDRANT_URL=https://some-qdrant-instance.cloud
 QDRANT_API_KEY=xxxxxxxxxxxxxxxxxxxx
 GROQ_API_KEY=xxxxxxxxxxxxxxxxxxxx
+```
 
-▶️ Usage
-Run Streamlit app:
+**🔑 Getting API Keys:**
+
+- **Groq API Key**: Sign up at [Groq Console](https://console.groq.com/) and create your free API key
+- **Qdrant**: Create a free account at [Qdrant Cloud](https://cloud.qdrant.io/) to get your URL and API key
+
+---
+
+## ▶️ Usage
+
+### Run Streamlit app:
+
+```bash
 streamlit run app.py
+```
 
-In the UI:
+### In the UI:
 
-Upload a PDF or enter a website URL
+1. Upload a PDF or enter a website URL
+2. Click **Ingest Source**
+3. Ask questions based on the document
 
-Click Ingest Source
+### The bot will:
 
-Ask questions based on the document
+- Detect intent
+- Retrieve relevant chunks
+- Check contradictions
+- Provide clean structured answers
+- Show exact sources used
 
-The bot will:
+---
 
-Detect intent
+## 🧠 How It Works (Architecture Overview)
 
-Retrieve relevant chunks
-
-Check contradictions
-
-Provide clean structured answers
-
-Show exact sources used
-
-🧠 How It Works (Architecture Overview)
+```
 🔹 1. User message
-
-↓
-
+         ↓
 🔹 2. Intent Classifier
-
-Handles GREETING / GOODBYE / CHITCHAT / CONTROL_COMMAND
-↓
-
+         Handles GREETING / GOODBYE / CHITCHAT / CONTROL_COMMAND
+         ↓
 🔹 3. Retrieval Agent
-
-Reformulates query
-
-Searches vectorstore
-
-Score-based filtering
-
-Detects repetition
-
-Returns top context chunks
-↓
-
+         Reformulates query
+         Searches vectorstore
+         Score-based filtering
+         Detects repetition
+         Returns top context chunks
+         ↓
 🔹 4. Answer Agent
-
-Checks contradictions
-
-Generates structured answer
-
-Appends sources
-↓
-
+         Checks contradictions
+         Generates structured answer
+         Appends sources
+         ↓
 🔹 5. Memory Updated
+         Helps detect repeated questions & context recall
+```
 
-Helps detect repeated questions & context recall
+---
+
+## 🔑 Key Technologies
+
+- **Streamlit** - Interactive web interface
+- **LangChain** - LLM orchestration and vector operations
+- **Groq** - Fast LLM inference
+- **Qdrant** - Vector database for semantic search
+- **Python** - Core programming language
+
+---
+
+## 📝 License
+
+This project is open source and available under the MIT License.
+
+---
+
+## 🤝 Contributing
+
+Contributions, issues, and feature requests are welcome! Feel free to check the issues page.
+
+---
+
+## 👤 Author
+
+**Mahatshi Shukla**
+
+- GitHub: [jinxforhaters](https://github.com/jinxforhaters)
+
+---
+
+## ⭐ Show your support
+
+Give a ⭐️ if this project helped you!
